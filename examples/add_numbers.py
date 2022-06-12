@@ -1,10 +1,7 @@
 """
-==============
-Attention LSTM
-==============
-"""
-
-"""
+===========
+add numbers
+===========
 This example illustrates how to use 'self-attention' mechanism op top of LSTM to make
 the prediction of LSTM interpretable.
 """
