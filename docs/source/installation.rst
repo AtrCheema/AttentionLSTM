@@ -4,4 +4,4 @@ installation
 
 using pip
 ::
-    pip install atten_lstm
+    pip install AttentionLSTM

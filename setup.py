@@ -3,7 +3,7 @@ from setuptools import setup
 
 import os
 
-long_desc="AttentionLSTM",
+long_desc="AttentionLSTM"
 
 fpath = os.path.join(os.getcwd(), "readme.md")
 if os.path.exists(fpath):

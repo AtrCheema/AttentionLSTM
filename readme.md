@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/attentionlstm/badge/?version=latest)](https://attentionlstm.readthedocs.io/en/latest/?badge=latest)
+
 comibining SelfAttention mechnism with LSTM
 
 ```python
@@ -21,4 +23,4 @@ y = np.random.random((100, 1))
 h = model.fit(x=x, y=y)
 ```
 
-For more comprehensive illustration see examples
+For more comprehensive illustration see [examples](https://attentionlstm.readthedocs.io/en/latest/auto_examples/index.html)
