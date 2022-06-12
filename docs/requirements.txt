@@ -1,0 +1,12 @@
+
+tensorflow==1.15
+numpy==1.19.5
+ai4water
+h5py==2.10
+sphinx
+sphinx-prompt
+sphinx_copybutton
+sphinx_toggleprompt
+sphinx_rtd_theme
+sphinx-gallery
+sphinx_issues

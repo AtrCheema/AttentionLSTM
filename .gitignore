@@ -1,0 +1,44 @@
+*.csv
+*.xlsx
+*.png
+*.npz
+*.mat
+*.h5
+*.nc
+*.feather
+*.parquet
+*.npy
+
+
+.ipynb_checkpoints/
+__pycache__/
+.idea/
+.vscode/
+.eggs/
+
+# private stuff
+results/
+data/
+
+# build related
+*dist/
+*build/
+
+# Unit test / coverage reports
+.coveralls.yml
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.jovianrc
+.tox/
+tox.ini
+
+# docs
+site/
+docs/source/auto_examples/
+docs/source/gen_modules/
+
+AttentionLSTM.egg-info
