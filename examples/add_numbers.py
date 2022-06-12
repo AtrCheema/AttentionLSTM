@@ -9,10 +9,6 @@ This example illustrates how to use 'self-attention' mechanism op top of LSTM to
 the prediction of LSTM interpretable.
 """
 
-import site
-site.addsitedir("D:\\mytools\\AI4Water")
-site.addsitedir("D:\\mytools\\AttentionLSTM")
-
 import ai4water
 ai4water.__version__
 
