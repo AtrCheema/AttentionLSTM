@@ -1,4 +1,5 @@
 [![Documentation Status](https://readthedocs.org/projects/attentionlstm/badge/?version=latest)](https://attentionlstm.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version](https://badge.fury.io/py/AttentionLSTM.svg)](https://badge.fury.io/py/AttentionLSTM)
 
 comibining SelfAttention mechnism with LSTM
 

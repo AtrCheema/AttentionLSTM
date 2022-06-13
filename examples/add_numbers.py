@@ -116,7 +116,7 @@ fig, axis = plt.subplots(2, sharex="all")
 
 imshow(attention_weights["self_attention"][0:num_examples],
        ylabel="Examples",
-       title="Predicted important steps", cmap="hot",
+       title="Important steps from Attention", cmap="hot",
       ax=axis[0], show=False)
 
 a = x_test1[0:num_examples].reshape(-1, seq_len)
@@ -133,7 +133,7 @@ fig, axis = plt.subplots(2, sharex="all")
 
 imshow(attention_weights["self_attention_1"][0:num_examples],
        ylabel="Examples",
-       title="Predicted important steps", cmap="hot",
+       title="Important steps from Attention", cmap="hot",
       ax=axis[0], show=False)
 
 a = x_test2[0:num_examples].reshape(-1, seq_len)
