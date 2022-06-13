@@ -1,7 +1,8 @@
-
-import site
-
-site.addsitedir("D:\\mytools\\AI4Water")
+"""
+==============
+ARG prediction
+==============
+"""
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,12 +12,23 @@ from ai4water import Model
 from ai4water.datasets import busan_beach
 
 data = busan_beach(inputs=['tide_cm', 'wat_temp_c', 'air_temp_c', 'sal_psu', 'pcp_mm', 'wind_dir_deg'])
+
+data.shape
+#%%
+
 input_features = data.columns.tolist()[0:-1]
+input_features
+#%%
+
 output_features = data.columns.tolist()[-1:]
+output_features
+#%%
+
 seq_len = 14
 num_inputs = len(input_features)
 
 #%%
+# build the model
 
 model = Model(
     model = {"layers": {
@@ -34,17 +46,20 @@ model = Model(
 )
 
 #%%
+# train the model
 
 h = model.fit(data=data, verbose=0)
 
 #%%
 
 x_test, y_test = model.validation_data(data=data)
+
 #%%
 
 attention_weights = model.get_attention_lstm_weights(x_test)
 
 #%%
+# plot attention maps
 
 num_examples = 40  # number of examples to show
 
