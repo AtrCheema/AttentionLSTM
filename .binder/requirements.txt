@@ -1,4 +1,2 @@
 ai4water
-tensorflow==1.15
-numpy==1.19.5
-h5py==2.10
+tensorflow==2.8.0

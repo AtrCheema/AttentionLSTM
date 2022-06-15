@@ -4,24 +4,33 @@ ARG prediction
 ==============
 """
 
-import pandas as pd
 import matplotlib.pyplot as plt
-from easy_mpl import imshow, plot
+from easy_mpl import imshow
+
+from sklearn.preprocessing import MinMaxScaler
 
 from ai4water import Model
 from ai4water.datasets import busan_beach
 
-data = busan_beach(inputs=['tide_cm', 'wat_temp_c', 'air_temp_c', 'sal_psu', 'pcp_mm', 'wind_dir_deg'])
+from SeqMetrics import RegressionMetrics
+
+data = busan_beach(inputs=[
+    'tide_cm', 'wat_temp_c', 'air_temp_c', 'sal_psu',
+    'pcp_mm', 'wind_dir_deg', 'wind_speed_mps'
+])
 
 data.shape
-#%%
 
+#%%
+# input features
 input_features = data.columns.tolist()[0:-1]
 input_features
+
 #%%
 
 output_features = data.columns.tolist()[-1:]
 output_features
+
 #%%
 
 seq_len = 14
@@ -33,73 +42,94 @@ num_inputs = len(input_features)
 model = Model(
     model = {"layers": {
         "Input_1": {"shape": (seq_len, num_inputs)},
-        "AttentionLSTM": {"num_inputs": num_inputs, "lstm_units": 16},
+        "AttentionLSTM": {"num_inputs": num_inputs, "lstm_units": 10},
         "Dense": 1
     }},
     x_transformation='minmax',
+    y_transformation="log",
     input_features=input_features,
     output_features = output_features,
     train_fraction=1.0,
+    split_random=True,
     ts_args={"lookback": seq_len},
-    epochs=40000,
-    patience=5000
+    lr=0.005,
+    batch_size=24,
+    epochs=50000,
+    patience=1000,
+    monitor=["nse"],
 )
 
 #%%
 # train the model
 
-h = model.fit(data=data, verbose=0)
+h = model.fit(data=data, verbose=1)
 
 #%%
 
-x_test, y_test = model.validation_data(data=data)
+x_val, y_val = model.validation_data(data=data)
+
+#%%
+# check performance
+
+pred_val = model.predict_on_validation_data(data=data, process_results=False)
+metrics = RegressionMetrics(y_val, pred_val)
+metrics.nse(), metrics.r2()
 
 #%%
 
-attention_weights = model.get_attention_lstm_weights(x_test)
+attention_weights = model.get_attention_lstm_weights(x_val)
 
 #%%
 # plot attention maps
 
 num_examples = 40  # number of examples to show
 
-fig, axis = plt.subplots(len(attention_weights), sharex="all", figsize=(6, 8))
 
-idx = 0
-for key, ax in zip(attention_weights.keys(), axis):
+for idx, key in enumerate(attention_weights.keys()):
 
-    imshow(attention_weights[key][0:num_examples].T,
-           ylabel="Sequence len",
-           title=input_features[idx],
-           cmap="hot",
-           ax=ax,
-           show=False,
-           vmin=0,
-           vmax=1.0,
-            aspect="auto",
-           )
-    idx += 1
+    fig, axis = plt.subplots(2, sharex="all", figsize=(6, 8))
 
-plt.xlabel("Examples")
-plt.tight_layout()
-plt.savefig("attention_maps")
-plt.show()
+    val = attention_weights[key][0:num_examples].T
+    val = MinMaxScaler().fit_transform(val)
+    imshow(val, colorbar=True, ax=axis[0], show=False, cmap="hot",
+           title=f"Attention map for {input_features[idx]}")
+    imshow(x_val[:, :, idx][0:num_examples].T, colorbar=True,
+        cmap="hot", ax=axis[1], show=False, title=input_features[idx])
+    plt.tight_layout()
+    plt.show()
 
 #%%
-# plot the input data
-
-x_test_df = pd.DataFrame(x_test[:, -1, :][0:num_examples], columns=input_features)
-x_test_df.plot(subplots=True, use_index=False)
-plt.xlabel("Examples")
-plt.savefig("input data")
-plt.show()
+# Training data
+#--------------
 
 #%%
-# plot the actual target data
+x_train, y_train = model.training_data(data=data)
 
-plot(y_test[0:num_examples], xlabel="Examples",
-     ylabel="ARG coppml",
-     title=output_features[0], show=False)
-plt.savefig("target_data")
-plt.show()
+#%%
+# check performance
 
+pred_train = model.predict_on_training_data(data=data, process_results=False)
+metrics = RegressionMetrics(y_train, pred_train)
+metrics.nse(), metrics.r2()
+
+#%%
+
+attention_weights_tr = model.get_attention_lstm_weights(x_train)
+
+#%%
+# plot attention maps
+
+num_examples = 40  # number of examples to show
+
+for idx, key in enumerate(attention_weights_tr.keys()):
+
+    fig, axis = plt.subplots(2, sharex="all", figsize=(6, 8))
+
+    val = attention_weights_tr[key][0:num_examples].T
+    val = MinMaxScaler().fit_transform(val)
+    imshow(val, colorbar=True, ax=axis[0], show=False, cmap="hot",
+           title=f"Attention map for {input_features[idx]}")
+    imshow(x_train[:, :, idx][0:num_examples].T, colorbar=True,
+        cmap="hot", ax=axis[1], show=False, title=input_features[idx])
+    plt.tight_layout()
+    plt.show()

@@ -1,8 +1,6 @@
 
-tensorflow==1.15
-numpy==1.19.5
+tensorflow==2.8.0
 ai4water
-h5py==2.10
 protobuf==3.19.1
 sphinx
 sphinx-prompt
