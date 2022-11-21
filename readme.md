@@ -25,3 +25,5 @@ h = model.fit(x=x, y=y)
 ```
 
 For more comprehensive illustration see [examples](https://attentionlstm.readthedocs.io/en/latest/auto_examples/index.html)
+
+# https://machinelearningmastery.com/attention-long-short-term-memory-recurrent-neural-networks/

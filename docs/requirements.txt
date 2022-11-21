@@ -1,6 +1,6 @@
 
 tensorflow==2.8.0
-ai4water
+git+https://github.com/AtrCheema/AI4Water.git@dev
 protobuf==3.19.1
 sphinx
 sphinx-prompt

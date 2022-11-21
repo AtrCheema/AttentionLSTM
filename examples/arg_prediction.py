@@ -19,17 +19,17 @@ data = busan_beach(inputs=[
     'pcp_mm', 'wind_dir_deg', 'wind_speed_mps'
 ])
 
-data.shape
+print(data.shape)
 
 #%%
 # input features
 input_features = data.columns.tolist()[0:-1]
-input_features
+print(input_features)
 
 #%%
 
 output_features = data.columns.tolist()[-1:]
-output_features
+print(output_features)
 
 #%%
 
@@ -113,23 +113,46 @@ metrics = RegressionMetrics(y_train, pred_train)
 metrics.nse(), metrics.r2()
 
 #%%
+model.data_config['allow_nan_labels'] = 2
+model.data_config['split_random'] = False
+x, y = model.all_data(data=data)
 
-attention_weights_tr = model.get_attention_lstm_weights(x_train)
+attention_weights_tr = model.get_attention_lstm_weights(x)
 
 #%%
 # plot attention maps
 
-num_examples = 40  # number of examples to show
+num_examples = 1400  # number of examples to show
 
 for idx, key in enumerate(attention_weights_tr.keys()):
 
-    fig, axis = plt.subplots(2, sharex="all", figsize=(6, 8))
+    fig, axis = plt.subplots(2, sharex="all", figsize=(8, 6),
+                             gridspec_kw={"hspace": 0.1})
 
     val = attention_weights_tr[key][0:num_examples].T
     val = MinMaxScaler().fit_transform(val)
     imshow(val, colorbar=True, ax=axis[0], show=False, cmap="hot",
-           title=f"Attention map for {input_features[idx]}")
-    imshow(x_train[:, :, idx][0:num_examples].T, colorbar=True,
-        cmap="hot", ax=axis[1], show=False, title=input_features[idx])
-    plt.tight_layout()
+           title=f"Attention map for {input_features[idx]}",
+           aspect="auto")
+    imshow(x[:, :, idx][0:num_examples].T, colorbar=True,
+        cmap="hot", ax=axis[1], show=False, title=input_features[idx],
+           aspect="auto")
+    plt.show()
+
+
+# %%
+# plot attention weights without normalization
+
+for idx, key in enumerate(attention_weights_tr.keys()):
+
+    fig, axis = plt.subplots(2, sharex="all", figsize=(8, 6),
+                             gridspec_kw={"hspace": 0.1})
+
+    val = attention_weights_tr[key][0:num_examples].T
+    imshow(val, colorbar=True, ax=axis[0], show=False, cmap="hot",
+           title=f"Attention map for {input_features[idx]}",
+           aspect="auto")
+    imshow(x[:, :, idx][0:num_examples].T, colorbar=True,
+        cmap="hot", ax=axis[1], show=False, title=input_features[idx],
+           aspect="auto")
     plt.show()
